@@ -1,0 +1,18 @@
+body {
+    background-color: grey;
+}
+
+
+.display {
+    background-color: burlywood;
+    width: 500px;
+    height: 150px;
+    font-weight: bolder;
+}
+.display div {
+    margin: 10px;
+    height: 60px;
+    border: 4px solid red;
+}
+
+
