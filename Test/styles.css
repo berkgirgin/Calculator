@@ -1,0 +1,19 @@
+body {
+    background-color: grey;
+}
+
+
+.container {
+
+    background-color: white;
+    width: 400px;
+    height: 400px;
+    color: red;
+}
+
+.first_level, .second_level {
+    background-color: pink;
+}
+
+
+
