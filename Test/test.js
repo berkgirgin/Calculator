@@ -1,6 +1,7 @@
-const numbers = [ 4, 9, 16, 45, 25];
-
-sum = numbers.find(a => a>19)
+// This is what your code does
+let numbers = [1, 2, 3, 4, 5];
+let removedNumbers = numbers.splice(2, 1)
+// numbers = removedNumbers;
 
 console.log(numbers);
-console.log(sum);
+console.log(removedNumbers);

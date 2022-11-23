@@ -4,9 +4,11 @@ const displayFieldLower = document.querySelector(".display .display_lower");
 
 var storedNumber = "";  
 var storedData = []; //this array will be used to calculate later(x and / having higher prio then + and -)
+var listOfOperators = ["+", "-", "x", "/"];
+
 
 const clearButton = document.querySelector(".clear");
-const deleteButton = document.querySelector(".delete");
+clearButton.addEventListener("click", function() {clearButtonFunc()});
 
 const numberButton_1 = document.querySelector(".number.one");
 numberButton_1.addEventListener("click", function() {storeNumber(1)} );
@@ -40,11 +42,19 @@ divideButton.addEventListener("click", function() {storeOperator("/")});
 
 const equalsButton = document.querySelector(".equals");
 equalsButton.addEventListener("click", function() {equalsOperator()});
+const decimalButton = document.querySelector(".decimal");
+decimalButton.addEventListener("click", function() {
+    if (storedNumber.includes(".")) {return;};
+    storeNumber(".");
+});
 
 
 
 function add(a, b) {
-    return a + b;
+    let x = Number(a);
+    let y = Number(b);
+    let z = x + y;
+    return z;
 }
 function subtract(a, b) {
     return a - b;
@@ -56,7 +66,7 @@ function divide(a, b) {
     return a / b;
 }
 
-function operator(number_1, number_2, selected_operator ) {
+function operatorFunc(number_1, number_2, selected_operator ) {
     // don't forget to give selected_operator as string
     let result;
     switch (selected_operator) {
@@ -76,7 +86,6 @@ function operator(number_1, number_2, selected_operator ) {
     return result;
 }
 
-
 function storeNumber(num) {
     // to be used on number button event listeners
     let numToString = num.toString();
@@ -89,7 +98,7 @@ function storeOperator(operator) {
     // to be used on operator event listeners
     if (storedNumber === "") {return;};
     storedData.push(storedNumber);
-    storedData.push(operator); // adds it as a function, not a string
+    storedData.push(operator);
     storedNumber = "";
     displayFieldLower.innerHTML = "";
     console.log(storedData);
@@ -97,33 +106,85 @@ function storeOperator(operator) {
 }
 
 function equalsOperator() {
+
+    if (storedNumber === "") {return;};
+    storedData.push(storedNumber);
+    let storedDataCopy = [...storedData];
     let result = calculateStoredInput(storedData);
+    let resultToString = result.toString();
+
+    storedDataCopy.push("=");
+    storedDataCopy.push(resultToString);
+
+    displayFieldUpper.innerHTML = storedDataCopy.join(" ");
     storedNumber = "";
     storedData = [];
-    storedData.push(result);
+    storedDataCopy = [];
+    // storedData.push(resultToString);
     displayFieldLower.innerHTML = "";
-    let resultToString = result.toString();
-    displayFieldUpper.innerHTML = resultToString;
+}
+
+function clearButtonFunc() {
+    storedNumber = "";
+    storedData = [];
+    displayFieldLower.innerHTML = "";
+    displayFieldUpper.innerHTML = "";
 }
 
 
-function calculateStoredInput(arrayStored) {
+function calculateStoredInput(arr) {
     //takes the array, which stored numbers and operators
     //calculates the result and returns it
 
     // first multiply and divide
+    let arrayStored = arr;
+    let result;
 
-    //!!! check reduce(), bcs i would need to iterate the array again after editing it??
-    for (i=0; i<arrayStored.length; i++) {
+    for (let i=0; i<arrayStored.length; i++) {
         if (arrayStored[i] === "x" || arrayStored[i] === "/") {
             let a = arrayStored[i-1];
             let b = arrayStored[i+1];
+            let operator = arrayStored[i];
 
+            result = operatorFunc(a, b, operator);
+            // console.log(result);
+            let resultToString = result.toString();
+            arrayStored.splice(`${(i-1)}`, 3, `${resultToString}`);
+            // console.log(arrayStored);
 
+            i=0;
         }    
-
     }
+
+    // after multiply and divide, now we do add and subtract
+    for (let i=0; i<arrayStored.length; i++) {
+        if (arrayStored[i] === "+" || arrayStored[i] === "-") {
+            let a = arrayStored[i-1];
+            let b = arrayStored[i+1];
+            let operator = arrayStored[i];
+
+            result = operatorFunc(a, b, operator);
+            // console.log(result);
+            let resultToString = result.toString();
+            arrayStored.splice(`${(i-1)}`, 3, `${resultToString}`);
+            // console.log(arrayStored);
+            
+            i=0;
+        }   
+    }
+    let x = Number(arrayStored);
+    let n = parseFloat(x.toFixed(2));
+    return n;
 }
 
 
-testOperatorHistory = ['2', '+', '5', 'x', '3'];
+// testOperatorHistory = ['2', 'x', '50', '/', '4', "-", "10"];
+// x = calculateStoredInput(testOperatorHistory)
+// console.log(x);
+
+// x = operator(2,5,"x");
+// console.log(x, typeof x);
+// testArr = [];
+// testArr.push(x);
+// testArr.push("10");
+// console.log(testArr);
