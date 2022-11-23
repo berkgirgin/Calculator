@@ -6,6 +6,20 @@ var storedNumber = "";
 var storedData = []; //this array will be used to calculate later(x and / having higher prio then + and -)
 var listOfOperators = ["+", "-", "x", "/"];
 
+const audio = document.querySelector("audio");
+const allButtons = document.querySelectorAll("button");
+allButtons.forEach(element => transitionFunc(element));
+
+function transitionFunc(element) {
+    element.addEventListener("click", function() {
+        this.classList.add("clicked");
+        audio.currentTime = 0;
+        audio.play();
+    });
+    element.addEventListener("transitionend", function() {
+        this.classList.remove("clicked");
+    });
+}
 
 const clearButton = document.querySelector(".clear");
 clearButton.addEventListener("click", function() {clearButtonFunc()});
@@ -91,7 +105,7 @@ function storeNumber(num) {
     let numToString = num.toString();
     storedNumber += numToString;
     displayFieldLower.innerHTML = storedNumber;
-    console.log(storedNumber);
+    // console.log(storedNumber);
 }
 
 function storeOperator(operator) {
@@ -101,7 +115,7 @@ function storeOperator(operator) {
     storedData.push(operator);
     storedNumber = "";
     displayFieldLower.innerHTML = "";
-    console.log(storedData);
+    // console.log(storedData);
     displayFieldUpper.innerHTML = storedData.join(" ");
 }
 
@@ -177,14 +191,3 @@ function calculateStoredInput(arr) {
     return n;
 }
 
-
-// testOperatorHistory = ['2', 'x', '50', '/', '4', "-", "10"];
-// x = calculateStoredInput(testOperatorHistory)
-// console.log(x);
-
-// x = operator(2,5,"x");
-// console.log(x, typeof x);
-// testArr = [];
-// testArr.push(x);
-// testArr.push("10");
-// console.log(testArr);
